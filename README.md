@@ -9,7 +9,11 @@ You could also learn some more details on how file queue pipeline works from htt
 
 # Usage
 a. Create a directory, such as "data"
+
 b. Create sub-directories such as "dogs", "cats" in "data" directory
+
 c. Place arbitrary sizes of images into corresponding sub-directories.
+
 d. Train and test your data, have fun
+
 PS: You could change the neural network architectures whatever you want in "inference" function.
