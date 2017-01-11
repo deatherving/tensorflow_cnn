@@ -5,7 +5,7 @@ from recognizer import *
 
 def predict(saver, logits):
 	with tf.Session() as sess:
-		ckpt = tf.train.get_checkpoint_state("./")
+		ckpt = tf.train.get_checkpoint_state("./model/")
 		if ckpt and ckpt.model_checkpoint_path:
 			saver.restore(sess, ckpt.model_checkpoint_path)
 			print "Model Loaded!"
@@ -26,7 +26,7 @@ def predict(saver, logits):
 
 def eval_once(saver, acc):
 	with tf.Session() as sess:
-		ckpt = tf.train.get_checkpoint_state("./")
+		ckpt = tf.train.get_checkpoint_state("./model/")
 		if ckpt and ckpt.model_checkpoint_path:
 			saver.restore(sess, ckpt.model_checkpoint_path)
 			print "Model Loaded!"
