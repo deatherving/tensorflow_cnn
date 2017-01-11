@@ -49,7 +49,7 @@ if __name__ == '__main__':
 	with tf.Graph().as_default():
 		images, labels = inputs("./data", [64, 64], 294, True)
 
-		logits = inference(images, 2, 1, True)
+		logits = inference(images, 2, 1.0, True)
 
 		acc = accuracy(logits, labels)
 
