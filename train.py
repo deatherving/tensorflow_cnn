@@ -6,39 +6,37 @@
 from recognizer import *
 
 
-
-
-
 if __name__ == '__main__':
-	with tf.Graph().as_default():
-		images, labels = inputs("./data", [64, 64], 128, True)
-	
-		logits = inference(images, 2, 0.5, True)
+	images, labels = inputs("./data", [64, 64], 128, True)
 
-		l = loss(logits, labels)
+	logits = inference(images, 2, 0.5)
 
-		acc = accuracy(logits, labels)
+	l = loss(logits, labels)
 
-		opt = optimizer(l)
+	acc = accuracy(logits, labels)
 
-		saver = tf.train.Saver()
+	opt = optimizer(l)
 
-		sess = tf.Session()
+	saver = tf.train.Saver()
 
-		sess.run(tf.global_variables_initializer())
+	sess = tf.Session()
 
-		coord = tf.train.Coordinator()
+	sess.run(tf.global_variables_initializer())
 
-		threads = tf.train.start_queue_runners(sess, coord = coord)
+	coord = tf.train.Coordinator()
 
-		for i in range(10000):
-			sess.run(opt)
-			print "Training Step: %d, Training Accuracy: %.5f" % (i, sess.run(acc))
-	
-		coord.request_stop()
+	threads = tf.train.start_queue_runners(sess, coord = coord)
 
-		coord.join(threads, stop_grace_period_secs = 10)
+	for i in range(2000):
+		sess.run(opt)
+		print "Training Step: %d, loss: %.5f, Training Accuracy: %.5f" % (i, sess.run(l), sess.run(acc))
 
-		save_path = saver.save(sess, "./model/model.ckpt")
+		if i % 1000 == 0:
+			saver.save(sess, "./model/model.ckpt")
+			print "Model Saved!"
 
-		print "Model Saved!"
+	coord.request_stop()
+
+	coord.join(threads, stop_grace_period_secs = 10)
+
+	sess.close()

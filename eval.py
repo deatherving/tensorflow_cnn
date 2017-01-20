@@ -2,6 +2,11 @@
 # author: K
 
 from recognizer import *
+from PIL import Image
+import numpy as np
+
+def predict_image(sess, logits):
+	print sess.run(tf.argmax(logits, 1))
 
 def predict(saver, logits):
 	with tf.Session() as sess:
@@ -24,7 +29,7 @@ def predict(saver, logits):
 		coord.join(threads, stop_grace_period_secs = 10)
 
 
-def eval_once(saver, acc):
+def eval_once(saver, logits, acc, labels):
 	with tf.Session() as sess:
 		ckpt = tf.train.get_checkpoint_state("./model/")
 		if ckpt and ckpt.model_checkpoint_path:
@@ -38,7 +43,10 @@ def eval_once(saver, acc):
 		
 		threads = tf.train.start_queue_runners(sess, coord = coord)
 
-		print "%.5f" % sess.run(acc)
+		l = tf.argmax(labels,1)
+		p = tf.argmax(logits,1)
+
+		print sess.run([l,p, tf.equal(l,p), acc])
 
 		coord.request_stop()
 
@@ -47,14 +55,17 @@ def eval_once(saver, acc):
 
 if __name__ == '__main__':
 	with tf.Graph().as_default():
-		images, labels = inputs("./data", [64, 64], 294, True)
 
-		logits = inference(images, 2, 1.0, True)
+		images, labels = inputs("./test_data", [64, 64], 128, True)
+
+		logits = inference(images, 2, 1.0)
 
 		acc = accuracy(logits, labels)
 
 		saver = tf.train.Saver()
 
-		eval_once(saver, acc)
+		#predict_image(saver, logits)
+
+		eval_once(saver, logits, acc, labels)
 
 		#predict(saver, logits)

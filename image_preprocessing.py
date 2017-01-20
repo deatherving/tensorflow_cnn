@@ -4,6 +4,7 @@
 from common import *
 from os import walk
 from os.path import join
+import numpy as np
 
 num_examples_per_epoch = 25000
 
@@ -74,7 +75,8 @@ def inputs(path, output_size, batch_size, one_hot = True):
 
 	min_queue_examples = int(num_examples_per_epoch * min_fraction_of_examples_in_queue)
 
-	return _match_images_and_labels(float_image, label, min_queue_examples, batch_size, True, one_hot)
+	return _match_images_and_labels(float_image, label, min_queue_examples, batch_size, False, one_hot)
+
 
 
 if __name__ == '__main__':

@@ -41,22 +41,19 @@ def inference(images, num_classes, dropout_prob):
 	h_conv2 = tf.nn.relu(conv_layer(h_pool1, W_conv2) + b_conv2)
 	h_pool2 = pooling_layer(h_conv2)
 
-	'''
 	# third layer
-	W_conv3 = weights_intializer([5, 5, 128, 64])
-	b_conv3 = bias_intiializer([64])
+	W_conv3 = weights_initializer([5, 5, 64, 64])
+	b_conv3 = bias_initializer([64])
 
-	h_conv3 = tf.nn.relu(conv_layer(h_poo2, W_conv3) + b_conv3)
+	h_conv3 = tf.nn.relu(conv_layer(h_pool2, W_conv3) + b_conv3)
 	h_pool3 = pooling_layer(h_conv3)
-
-	'''
 
 	# fully connect layer
 	# The shape of the W_fc1 is based on the max_pooling times, normally you can compute the shape dynamically.
-	W_fc1 = weights_initializer([16 * 16 * 64, 1024])
+	W_fc1 = weights_initializer([8 * 8 * 64, 1024])
 	b_fc1 = bias_initializer([1024])
 	
-	h_flat = tf.reshape(h_pool2, [-1, 16 * 16 * 64])
+	h_flat = tf.reshape(h_pool3, [-1, 8 * 8 * 64])
 	h_fc1 = tf.nn.relu(tf.matmul(h_flat, W_fc1) + b_fc1)
 
 	h_fc_drop1 = tf.nn.dropout(h_fc1, dropout_prob)
@@ -84,6 +81,9 @@ def optimizer(loss, learning_rate = 0.0001):
 	optimizer = tf.train.AdamOptimizer(learning_rate).minimize(loss)
 	return optimizer
 
+def predictions(out):
+	preds = tf.argmax(out, 1)
+	return preds
 
 def accuracy(out, labels):
 	accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(out, 1), tf.argmax(labels, 1)), tf.float32))
