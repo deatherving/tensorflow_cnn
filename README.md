@@ -19,3 +19,8 @@ d. Train and test your data
 e. Most inportant is: have fun with your network
 
 PS: You could change the neural network architectures whatever you want in "inference" function.
+
+# Also
+
+Please send email to me if you have any quesition or advice. Sharing makes us learn. 
+email: ervingzhou@gmail.com
