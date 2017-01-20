@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # author: K
 
-from common import *
+from common import num_examples_per_epoch, min_fraction_of_examples_in_queue, is_shuffle
 from os import walk
 from os.path import join
 import numpy as np
-
-num_examples_per_epoch = 25000
+import tensorflow as tf
 
 def _match_images_and_labels(image, label, min_queue_example, batch_size, shuffle, one_hot):
 	num_preprocess_threads = 16
@@ -41,6 +40,8 @@ def inputs(path, output_size, batch_size, one_hot = True):
 	classes = {}
 	class_idx = 0
 
+	global num_examples_per_epoch
+
 	for root, dirs, files in walk(path):
 		if len(dirs) != 0:
 			for d in dirs:
@@ -71,11 +72,9 @@ def inputs(path, output_size, batch_size, one_hot = True):
 
 	float_image = tf.image.per_image_standardization(resized_image)
 
-	min_fraction_of_examples_in_queue = 0.4
-
 	min_queue_examples = int(num_examples_per_epoch * min_fraction_of_examples_in_queue)
 
-	return _match_images_and_labels(float_image, label, min_queue_examples, batch_size, False, one_hot)
+	return _match_images_and_labels(float_image, label, min_queue_examples, batch_size, is_shuffle, one_hot)
 
 
 

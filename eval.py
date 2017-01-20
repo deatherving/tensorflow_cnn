@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # author: K
 
-from recognizer import *
+from common import testing_dir, testing_batch_size, image_size
+from recognizer import inference, accuracy, loss
+from image_preprocessing import inputs
 from PIL import Image
 import numpy as np
+import tensorflow as tf
 
 def predict_image(sess, logits):
 	print sess.run(tf.argmax(logits, 1))
@@ -56,9 +59,9 @@ def eval_once(saver, logits, acc, labels):
 if __name__ == '__main__':
 	with tf.Graph().as_default():
 
-		images, labels = inputs("./test_data", [64, 64], 128, True)
+		images, labels = inputs(testing_dir, image_size, testing_batch_size, True)
 
-		logits = inference(images, 2, 1.0)
+		logits = inference(images, 2, image_size, 1.0)
 
 		acc = accuracy(logits, labels)
 
