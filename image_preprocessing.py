@@ -57,6 +57,9 @@ def inputs(path, output_size, batch_size, one_hot = True):
 						labels.append(classes[key])
 			filenames.append(path)
 
+	print len(filenames)
+
+
 	tensor_labels = tf.pack(labels)
 
 	file_name_list = tf.train.slice_input_producer([filenames, tensor_labels])
